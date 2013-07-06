@@ -39,6 +39,7 @@ class I18nRouter extends Router
     private $defaultLocale;
     private $redirectToHost = true;
     private $localeResolver;
+    private $ignoredHosts;
 
     /**
      * Constructor.
@@ -70,6 +71,16 @@ class I18nRouter extends Router
     public function setRedirectToHost($bool)
     {
         $this->redirectToHost = (Boolean) $bool;
+    }
+
+    /**
+     * Hosts to ignore when matching routes
+     *
+     * @param array $hosts
+     */
+    public function setIgnoredHosts($hosts = array())
+    {
+        $this->ignoredHosts = $hosts;
     }
 
     /**
@@ -194,6 +205,8 @@ class I18nRouter extends Router
                         return $hostMap[$locale];
                     }, $params['_locales']);
 
+                    $availableHosts = $availableHosts + $this->ignoredHosts;
+
                     $differentHost = true;
                     foreach ($availableHosts as $host) {
                         if ($this->hostMap[$currentLocale] === $host) {
@@ -218,10 +231,17 @@ class I18nRouter extends Router
             $params['_route'] = substr($params['_route'], $pos + strlen(I18nLoader::ROUTING_PREFIX));
         }
 
+
+
         // check if the matched route belongs to a different locale on another host
         if (isset($params['_locale'])
                 && isset($this->hostMap[$params['_locale']])
-                && $this->context->getHost() !== $host = $this->hostMap[$params['_locale']]) {
+                && !in_array($this->context->getHost(), $this->ignoredHosts)
+                && $this->context->getHost() !== $host = $this->hostMap[$params['_locale']]
+
+        ) {
+
+
             if (!$this->redirectToHost) {
                 throw new ResourceNotFoundException(sprintf(
                     'Resource corresponding to pattern "%s" not found for locale "%s".', $url, $this->getContext()->getParameter('_locale')));

@@ -100,6 +100,20 @@ final class Configuration implements ConfigurationInterface
                         ->useAttributeAsKey('locale')
                         ->prototype('scalar')->end()
                     ->end()
+                    ->arrayNode('ignored_hosts')
+                        ->validate()
+                        ->always()
+                        ->then(function($v) {
+                            if (count($v) !== count(array_flip($v))) {
+                                throw new \Exception('Every locale must map to a different host. You cannot have multiple locales map to the same host.');
+                            }
+
+                            return $v;
+                        })
+                        ->end()
+                        ->useAttributeAsKey('locale')
+                        ->prototype('scalar')->end()
+                    ->end()
                     ->booleanNode('redirect_to_host')->defaultTrue()->end()
                     ->booleanNode('use_cookie')->defaultTrue()->info('DEPRECATED! Please use: cookie.enabled')->end()
                     ->arrayNode('cookie')

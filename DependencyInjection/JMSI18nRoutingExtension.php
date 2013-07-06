@@ -58,6 +58,15 @@ class JMSI18nRoutingExtension extends Extension
             ;
         }
 
+        if ($config['ignored_hosts']) {
+            $container->setParameter('jms_i18n_routing.ignored_hosts', $config['ignored_hosts']);
+            $container
+                ->getDefinition('jms_i18n_routing.router')
+                ->addMethodCall('setIgnoredHosts', array('%jms_i18n_routing.ignored_hosts%'))
+            ;
+
+        }
+
         if ($config['hosts']) {
             $container->setParameter('jms_i18n_routing.hostmap', $config['hosts']);
             $container
