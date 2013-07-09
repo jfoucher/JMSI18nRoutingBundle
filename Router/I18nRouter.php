@@ -39,7 +39,7 @@ class I18nRouter extends Router
     private $defaultLocale;
     private $redirectToHost = true;
     private $localeResolver;
-    private $ignoredHosts;
+    private $ignoredHosts = array();
 
     /**
      * Constructor.
