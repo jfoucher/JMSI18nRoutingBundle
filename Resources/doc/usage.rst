@@ -41,8 +41,8 @@ Some examples below::
     <a href="{{ path("homepage", {"_locale": "en"}) }}">English</a>
     
 Leaving routes untranslated
--------------------------
-If you don't want to translate a single given route, you can disable it:
+---------------------------
+If you don't want to translate a single given route, you can begin the route name with "_" (e.g. "_contact") or disable it in the routing configuration:
 
 .. code-block :: yaml
 
@@ -50,6 +50,17 @@ If you don't want to translate a single given route, you can disable it:
     homepage:
         ...
         options: { i18n: false }
+
+Prefixing routes before the _locale
+-----------------------------------
+If you want to add a prefix before the _locale string (e.g. /admin/en/dashboard), you can add the "i18n_prefix" option.
+
+.. code-block :: yaml
+
+    # app/config/routing.yml
+    dashboard:
+        ...
+        options: { i18n_prefix: admin }
 
 More Resources
 --------------
